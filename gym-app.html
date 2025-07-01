@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Treino</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; 
+            color: #f9fafb;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+       
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+      
+        .header {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #818cf8; 
+        }
+
+        .header p {
+            margin-top: 0.5rem;
+            color: #9ca3af; 
+        }
+
+        
+        .day-tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        .day-tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-tab {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #1f2937;
+            color: #f9fafb;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .day-tab:hover {
+            background-color: #374151;
+        }
+
+        .day-tab.active {
+            background-color: #4f46e5;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+       
+        #workout-details {
+            background-color: #1f2937; 
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #workout-details h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        #workout-details .workout-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #818cf8;
+            margin-bottom: 1.5rem;
+        }
+        
+        
+        .workout-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .workout-table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+        .workout-table th, .workout-table td {
+            padding: 0.75rem 0.5rem;
+        }
+        
+        .workout-table th {
+             border-bottom: 1px solid #4b5563; 
+             color: #d1d5db;
+             font-weight: 600;
+        }
+
+        .workout-table td {
+            border-bottom: 1px solid #374151; 
+        }
+        
+        .workout-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .workout-table .text-center {
+            text-align: center;
+        }
+        
+        .workout-table .obs-cell {
+            color: #9ca3af; 
+            font-size: 0.875rem;
+        }
+
+       
+        .exercise-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .exercise-row:hover {
+            background-color: #374151; 
+        }
+        .exercise-row.completed .exercise-name {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .completion-checkbox {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: transparent;
+            margin-right: 0.75rem;
+            font: inherit;
+            color: #6b7280;
+            width: 1.15em;
+            height: 1.15em;
+            border: 0.15em solid currentColor;
+            border-radius: 50%;
+            transform: translateY(0.075em);
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        .completion-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #4f46e5; 
+        }
+        .completion-checkbox:checked::before {
+            transform: scale(1);
+        }
+        .weights-row {
+            display: none;
+        }
+        .weights-row.visible {
+            display: table-row;
+        }
+        .weights-cell {
+            padding: 0.75rem 1rem !important;
+            background-color: #111827;
+        }
+        .weights-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        .weight-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .weight-input-group label {
+            font-size: 0.8rem;
+            color: #9ca3af; 
+            padding-left: 0.2rem;
+        }
+        .weights-input {
+            padding: 0.5rem;
+            border-radius: 0.3rem;
+            border: 1px solid #4b5563; 
+            background-color: #374151; 
+            color: white;
+            width: 70px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 250px;
+            text-align: center;
+        }
+        .message-container svg {
+            width: 4rem;
+            height: 4rem;
+            color: #818cf8;
+        }
+        .message-container p {
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <h1>Meu Plano de Treino</h1>
+            <p>Selecione o dia para ver os exercícios</p>
+        </header>
+
+        <div class="day-tabs-container">
+            <button data-day="Segunda" class="day-tab">Seg</button>
+            <button data-day="Terça" class="day-tab">Ter</button>
+            <button data-day="Quarta" class="day-tab">Qua</button>
+            <button data-day="Quinta" class="day-tab">Qui</button>
+            <button data-day="Sexta" class="day-tab">Sex</button>
+            <button data-day="Sábado" class="day-tab">Sáb</button>
+            <button data-day="Domingo" class="day-tab">Dom</button>
+        </div>
+
+        <main id="workout-details">
+            
+        </main>
+
+        <footer class="footer">
+            <p>NO PAIN, NO GAIN!</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+           
+            const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRULZD5E7cJ42W5eEbUivP9XR_qrfD58Cmr-sPJR01Y2-C5Yq-_9pGAHHxPSJc-zEyJrW3ZWegFCfWr/pub?gid=1800486219&single=true&output=csv';
+            const workoutDetailsContainer = document.getElementById('workout-details');
+            const dayTabs = document.querySelectorAll('.day-tab');
+            let workoutData = {}; 
+            let workoutProgress = {}; 
+ 
+            
+            function showMessage(message, isLoading = false) {
+                let iconHtml = '';
+                if (isLoading) {
+                    iconHtml = `
+                        <svg class="loading-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.667 0l3.181-3.183m-4.991-2.691V5.006h-4.992a8.25 8.25 0 01-11.667 0c0 0 0 0 0 0z" />
+                        </svg>`;
+                }
+                workoutDetailsContainer.innerHTML = `
+                    <div class="message-container">
+                        ${iconHtml}
+                        <p>${message}</p>
+                    </div>`;
+            }
+
+            
+            function loadProgress() {
+                const savedProgress = localStorage.getItem('workoutProgress');
+                workoutProgress = savedProgress ? JSON.parse(savedProgress) : {};
+            }
+
+            
+            function saveProgress() {
+                localStorage.setItem('workoutProgress', JSON.stringify(workoutProgress));
+            }
+
+           
+            function parseCSV(csvText) {
+                const data = {};
+                const lines = csvText.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+
+                
+                for (let i = 1; i < lines.length; i++) {
+                    
+                    const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(field => field.replace(/"/g, '').trim());
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+
+                    const day = row['Dia'];
+                    if (!day) continue; 
+
+                    const workoutName = row['Grupo Muscular'];
+                    const exercise = {
+                        name: row['Exercício'],
+                        series: row['Séries'],
+                        reps: row['Reps'],
+                        obs: row['Observações'],
+                    };
+
+                    if (!data[day]) {
+                        data[day] = { name: workoutName, exercises: [] };
+                    }
+                    if (exercise.name) { 
+                        data[day].exercises.push(exercise);
+                    }
+                }
+                return data;
+            }
+
+            
+            function displayWorkout(day) {
+                const data = workoutData[day];
+
+                
+                workoutDetailsContainer.innerHTML = '';
+                workoutDetailsContainer.style.justifyContent = 'flex-start';
+
+                
+
+                
+                dayTabs.forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.day.toLowerCase() === day.toLocaleLowerCase());
+                });
+
+                let contentHTML = `
+                    <h2>${day}</h2>
+                    <p class="workout-name">${data.name}</p>
+                `;
+
+                if (data.exercises.length > 0) {
+                    contentHTML += `
+                        <div class="workout-table-wrapper">
+                            <table class="workout-table">
+                                <thead>
+                                    <tr>
+                                        <th>Exercício</th>
+                                        <th class="text-center">Séries</th>
+                                        <th class="text-center">Reps</th>
+                                        <th>Observações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                    data.exercises.forEach(ex => {
+                        const exerciseId = `${day.replace(/\s+/g, '-')}-${ex.name.replace(/\s+/g, '-')}`;
+                        const progress = workoutProgress[exerciseId] || { completed: false, weights: [] };
+                        const seriesCount = parseInt(ex.series, 10) || 0;
+
+                        let weightsInputsHTML = '';
+                        if (seriesCount > 0) {
+                            for (let i = 0; i < seriesCount; i++) {
+                                weightsInputsHTML += `
+                                    <div class="weight-input-group">
+                                        <label for="weights-${exerciseId}-${i}">Série ${i + 1}</label>
+                                        <input type="text" id="weights-${exerciseId}-${i}" class="weights-input" data-exercise-id="${exerciseId}" data-series-index="${i}" value="${(Array.isArray(progress.weights) && progress.weights[i]) || ''}" placeholder="kg">
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            
+                            weightsInputsHTML = `
+                                <div class="weight-input-group" style="flex-grow: 1;">
+                                    <label for="weights-${exerciseId}-0">Anotação:</label>
+                                    <input type="text" id="weights-${exerciseId}-0" class="weights-input" data-exercise-id="${exerciseId}" data-series-index="0" value="${(Array.isArray(progress.weights) && progress.weights[0]) || ''}" placeholder="Ex: 30 min" style="width: 100%;">
+                                </div>
+                            `;
+                        }
+                        
+                        contentHTML += `
+                            <tr class="exercise-row ${progress.completed ? 'completed' : ''}" data-exercise-id="${exerciseId}">
+                                <td>
+                                    <input type="checkbox" class="completion-checkbox" data-exercise-id="${exerciseId}" ${progress.completed ? 'checked' : ''}>
+                                    <span class="exercise-name">${ex.name}</span>
+                                </td>
+                                <td class="text-center">${ex.series || '---'}</td>
+                                <td class="text-center">${ex.reps || '---'}</td>
+                                <td class="obs-cell">${ex.obs || '---'}</td>
+                            </tr>
+                            <tr class="weights-row" data-weights-for="${exerciseId}">
+                                <td colspan="4" class="weights-cell">
+                                    <div class="weights-container">
+                                        ${weightsInputsHTML}
+                                    </div>
+                                </td>
+                            </tr>`;
+                    });
+
+                    contentHTML += `
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else {
+                    
+                    workoutDetailsContainer.style.justifyContent = 'center';
+                    contentHTML += `
+                        <div class="message-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="color: #34d399;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p>Aproveite para recarregar as energias!</p>
+                        </div>`;
+                }
+
+                workoutDetailsContainer.innerHTML = contentHTML;
+            }
+
+            /**
+             * Inicializa o aplicativo, carregando os dados do treino e configurando eventos.
+             */
+            async function initializeApp() {
+                loadProgress(); 
+                showMessage("Carregando treino...", true);
+                try {
+                    const response = await fetch(CSV_URL);
+                    if (!response.ok) {
+                        throw new Error(`Erro na rede: ${response.statusText}`);
+                    }
+                    const csvText = await response.text();
+                    workoutData = parseCSV(csvText);
+
+                    
+                    dayTabs.forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            displayWorkout(tab.dataset.day);
+                        });
+                    });
+                    
+                    
+                    workoutDetailsContainer.addEventListener('click', (event) => {
+                        const exerciseRow = event.target.closest('.exercise-row');
+                        if (!exerciseRow) return;
+
+                        const exerciseId = exerciseRow.dataset.exerciseId;
+
+                        
+                        if (event.target.type === 'checkbox') {
+                            const isCompleted = event.target.checked;
+                            exerciseRow.classList.toggle('completed', isCompleted);
+                            if (!workoutProgress[exerciseId]) workoutProgress[exerciseId] = {};
+                            workoutProgress[exerciseId].completed = isCompleted;
+                            saveProgress();
+                            return; 
+                        }
+
+                        
+                        const weightsRow = workoutDetailsContainer.querySelector(`tr[data-weights-for="${exerciseId}"]`);
+                        if (weightsRow) {
+                            weightsRow.classList.toggle('visible');
+                        }
+                    });
+
+                    
+                    workoutDetailsContainer.addEventListener('input', (event) => {
+                        if (event.target.classList.contains('weights-input')) {
+                            const target = event.target;
+                            const exerciseId = target.dataset.exerciseId;
+                            const seriesIndex = parseInt(target.dataset.seriesIndex, 10);
+
+                            
+                            if (!workoutProgress[exerciseId]) {
+                                workoutProgress[exerciseId] = { completed: false, weights: [] };
+                            }
+                            
+                            if (!Array.isArray(workoutProgress[exerciseId].weights)) {
+                                workoutProgress[exerciseId].weights = [];
+                            }
+
+                           
+                            workoutProgress[exerciseId].weights[seriesIndex] = target.value;
+                            
+                            saveProgress();
+                        }
+                    });
+
+
+                    const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
+                    const dayToDisplay = Object.keys(workoutData).find(d => d.toLowerCase() === today.toLowerCase()) || 'Segunda';
+                    displayWorkout(dayToDisplay);
+
+                } catch (error) {
+                    console.error("Falha ao carregar os dados do treino:", error);
+                    showMessage("Não foi possível carregar o treino. Tente novamente mais tarde.");
+                }
+            }
+
+            initializeApp();
+        });
+    </script>
+
+</body>
+</html>

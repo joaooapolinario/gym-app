@@ -1,0 +1,272 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #111827;
+    color: #f9fafb;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+
+.header {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.header h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #818cf8;
+}
+
+.header p {
+    margin-top: 0.5rem;
+    color: #9ca3af;
+}
+
+
+.day-tabs-container {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.day-tabs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.day-tab {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #1f2937;
+    color: #f9fafb;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.day-tab:hover {
+    background-color: #374151;
+}
+
+.day-tab.active {
+    background-color: #4f46e5;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+
+#workout-details {
+    background-color: #1f2937;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#workout-details h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+#workout-details .workout-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #818cf8;
+    margin-bottom: 1.5rem;
+}
+
+
+.workout-table-wrapper {
+    overflow-x: auto;
+}
+
+.workout-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.workout-table th,
+.workout-table td {
+    padding: 0.75rem 0.5rem;
+}
+
+.workout-table th {
+    border-bottom: 1px solid #4b5563;
+    color: #d1d5db;
+    font-weight: 600;
+}
+
+.workout-table td {
+    border-bottom: 1px solid #374151;
+}
+
+.workout-table tr:last-child td {
+    border-bottom: none;
+}
+
+.workout-table .text-center {
+    text-align: center;
+}
+
+.workout-table .obs-cell {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+
+.exercise-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.exercise-row:hover {
+    background-color: #374151;
+}
+
+.exercise-row.completed .exercise-name {
+    text-decoration: line-through;
+    color: #6b7280;
+}
+
+.completion-checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    margin-right: 0.75rem;
+    font: inherit;
+    color: #6b7280;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 50%;
+    transform: translateY(0.075em);
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+.completion-checkbox::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #4f46e5;
+}
+
+.completion-checkbox:checked::before {
+    transform: scale(1);
+}
+
+.weights-row {
+    display: none;
+}
+
+.weights-row.visible {
+    display: table-row;
+}
+
+.weights-cell {
+    padding: 0.75rem 1rem !important;
+    background-color: #111827;
+}
+
+.weights-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.weight-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.weight-input-group label {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    padding-left: 0.2rem;
+}
+
+.weights-input {
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid #4b5563;
+    background-color: #374151;
+    color: white;
+    width: 70px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    text-align: center;
+}
+
+.message-container svg {
+    width: 4rem;
+    height: 4rem;
+    color: #818cf8;
+}
+
+.message-container p {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #d1d5db;
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}

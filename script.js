@@ -171,8 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
         workoutDetailsContainer.innerHTML = contentHTML;
     }
 
-    /**
-     * Inicializa o aplicativo, carregando os dados do treino e configurando eventos.
+    /*
+     Inicializa o aplicativo, carregando os dados do treino e configurando eventos.
      */
     async function initializeApp() {
         loadProgress();
@@ -234,12 +234,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            const today = new Date().toLocaleDateString("pt-BR", { weekday: "long" });
-            const dayToDisplay =
-                Object.keys(workoutData).find(
-                    (d) => d.toLowerCase() === today.toLowerCase()
-                ) || "Segunda";
-            displayWorkout(dayToDisplay);
+            const daysOfWeek = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+            const todayIndex = new Date().getDay();
+            const todayName = daysOfWeek[todayIndex];
+                    
+            displayWorkout(todayName); // Exibe o treino do dia atual
+            
         } catch (error) {
             console.error("Falha ao carregar os dados do treino:", error);
             showMessage(
